@@ -1,6 +1,11 @@
 <?php
 
-class OAuthModel
+namespace Joindin\Api;
+
+use \PDO;
+use \Request;
+
+class OAuth
 {
     /**
      * @var PDO

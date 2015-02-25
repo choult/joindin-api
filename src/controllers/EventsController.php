@@ -28,28 +28,28 @@ class EventsController extends ApiController {
         if(isset($request->url_elements[4])) {
             switch($request->url_elements[4]) {
                 case 'talks':
-                            $talk_mapper = new TalkMapper($db, $request);
+                            $talk_mapper = new \Joindin\Api\Mapper\Talk($db, $request);
                             $list = $talk_mapper->getTalksByEventId($event_id, $resultsperpage, $start, $verbose);
                             break;
                 case 'comments':
-                            $event_comment_mapper = new EventCommentMapper($db, $request);
+                            $event_comment_mapper = new \Joindin\Api\Mapper\Event\Comment($db, $request);
                             $list = $event_comment_mapper->getEventCommentsByEventId($event_id, $resultsperpage, $start, $verbose);
                             break;
                 case 'talk_comments':
                             $sort = $this->getSort($request);
-                            $talk_comment_mapper = new TalkCommentMapper($db, $request);
+                            $talk_comment_mapper = new \Joindin\Api\Mapper\Talk\Comment($db, $request);
                             $list = $talk_comment_mapper->getCommentsByEventId($event_id, $resultsperpage, $start, $verbose, $sort);
                             break;
                 case 'attendees':
-                            $user_mapper= new UserMapper($db, $request);
+                            $user_mapper= new \Joindin\Api\Mapper\User($db, $request);
                             $list = $user_mapper->getUsersAttendingEventId($event_id, $resultsperpage, $start, $verbose);
                             break;
                 case 'attending':
-                            $mapper = new EventMapper($db, $request);
+                            $mapper = new \Joindin\Api\Mapper\Event($db, $request);
                             $list = $mapper->getUserAttendance($event_id, $request->user_id);
                             break;
                 case 'tracks':
-                            $mapper = new TrackMapper($db, $request);
+                            $mapper = new \Joindin\Api\Mapper\Track($db, $request);
                             $list = $mapper->getTracksByEventId($event_id, $resultsperpage, $start, $verbose);
                             break;
                 default:
@@ -57,7 +57,7 @@ class EventsController extends ApiController {
                             break;
             }
         } else {
-            $mapper = new EventMapper($db, $request);
+            $mapper = new \Joindin\Api\Mapper\Event($db, $request);
             if($event_id) {
                 $list = $mapper->getEventById($event_id, $verbose);
                 if(count($list['events']) == 0) {
@@ -126,7 +126,7 @@ class EventsController extends ApiController {
                     // the body of this request is completely irrelevant
                     // The logged in user *is* attending the event.  Use DELETE to unattend
                     $event_id = $this->getItemId($request);
-                    $event_mapper = new EventMapper($db, $request);
+                    $event_mapper = new \Joindin\Api\Mapper\Event($db, $request);
                     $event_mapper->setUserAttendance($event_id, $request->user_id);
                     header("Location: " . $request->base . $request->path_info, NULL, 201);
                     return;
@@ -139,7 +139,7 @@ class EventsController extends ApiController {
                         );
                     }
 
-                    $event_mapper = new EventMapper($db, $request);
+                    $event_mapper = new \Joindin\Api\Mapper\Event($db, $request);
                     $is_admin = $event_mapper->thisUserHasAdminOn($talk['event_id']);
                     if(!$is_admin) {
                         throw new Exception("You do not have permission to add talks to this event", 400);
@@ -196,7 +196,7 @@ class EventsController extends ApiController {
                         }
                     }
 
-                    $talk_mapper = new TalkMapper($db, $request);
+                    $talk_mapper = new \Joindin\Api\Mapper\Talk($db, $request);
                     $new_id = $talk_mapper->save($talk);
 
                     // Update the cache count for the number of talks at this event
@@ -218,7 +218,7 @@ class EventsController extends ApiController {
                     if(!isset($request->user_id) || empty($request->user_id)) {
                         throw new Exception('You must log in to comment');
                     }
-                    $user_mapper = new UserMapper($db, $request);
+                    $user_mapper = new \Joindin\Api\Mapper\User($db, $request);
                     $users = $user_mapper->getUserById($request->user_id);
                     $thisUser = $users['users'][0];
 
@@ -252,7 +252,7 @@ class EventsController extends ApiController {
                         }
                     }
 
-                    $comment_mapper = new EventCommentMapper($db, $request);
+                    $comment_mapper = new \Joindin\Api\Mapper\Event\Comment($db, $request);
                     try {
                         $new_id = $comment_mapper->save($comment);
                     } catch (Exception $e) {
@@ -261,7 +261,7 @@ class EventsController extends ApiController {
                     }
 
                     // Update the cache count for the number of event comments on this event
-                    $event_mapper = new EventMapper($db, $request);
+                    $event_mapper = new \Joindin\Api\Mapper\Event($db, $request);
                     $event_mapper->cacheCommentCount($comment['event_id']);
 
                     $uri = $request->base . '/' . $request->version . '/event_comments/' . $new_id;
@@ -359,8 +359,8 @@ class EventsController extends ApiController {
             if($errors) {
                 throw new Exception(implode(". ", $errors), 400);
             } else {
-                $user_mapper= new UserMapper($db, $request);
-                $event_mapper = new EventMapper($db, $request);
+                $user_mapper= new \Joindin\Api\Mapper\User($db, $request);
+                $event_mapper = new \Joindin\Api\Mapper\Event($db, $request);
 
                 $event_owner = $user_mapper->getUserById($request->user_id);
                 $event['contact_name'] = $event_owner['users'][0]['full_name'];
@@ -405,7 +405,7 @@ class EventsController extends ApiController {
             switch($request->url_elements[4]) {
                 case 'attending':
                     $event_id = $this->getItemId($request);
-                    $event_mapper = new EventMapper($db, $request);
+                    $event_mapper = new \Joindin\Api\Mapper\Event($db, $request);
                     $event_mapper->setUserNonAttendance($event_id, $request->user_id);
                     header("Location: " . $request->base . $request->path_info, NULL, 200);
                     return;
@@ -428,7 +428,7 @@ class EventsController extends ApiController {
         if (! isset($request->url_elements[4])) {
 
             // Edit an Event
-            $event_mapper = new EventMapper($db, $request);
+            $event_mapper = new \Joindin\Api\Mapper\Event($db, $request);
             $existing_event = $event_mapper->getEventById($event_id, true);
             if (! $existing_event) {
                 throw new Exception(sprintf(

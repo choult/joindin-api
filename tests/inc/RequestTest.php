@@ -475,7 +475,7 @@ class RequestTest extends \PHPUnit_Framework_TestCase
         $request = new \Request($this->config, []);
         $result  = $request->getOAuthModel($db);
 
-        $this->assertInstanceOf('OAuthModel', $result);
+        $this->assertInstanceOf('\Joindin\Api\OAuth', $result);
     }
 
     /**
@@ -504,7 +504,7 @@ class RequestTest extends \PHPUnit_Framework_TestCase
     public function setOauthModelMethodIsFluent()
     {
         /* @var $mockOauth \OAuthModel */
-        $mockOauth = $this->getMock('OAuthModel', array(), array(), '', false);
+        $mockOauth = $this->getMock('\Joindin\Api\OAuth', array(), array(), '', false);
         $request   = new \Request($this->config, []);
 
         $this->assertSame($request, $request->setOauthModel($mockOauth));
@@ -521,7 +521,7 @@ class RequestTest extends \PHPUnit_Framework_TestCase
     public function setOauthModelAllowsSettingOfOauthModel()
     {
         /* @var $mockOauth \OAuthModel */
-        $mockOauth = $this->getMock('OAuthModel', array(), array(), '', false);
+        $mockOauth = $this->getMock('\Joindin\Api\OAuth', array(), array(), '', false);
         $request   = new \Request($this->config, []);
         $request->setOauthModel($mockOauth);
 
@@ -539,7 +539,7 @@ class RequestTest extends \PHPUnit_Framework_TestCase
     public function identifyUserWithOauthTokenTypeSetsUserIdForValidHeader()
     {
         $request   = new \Request($this->config, ['HTTPS' => 'on']);
-        $mockOauth = $this->getMock('OAuthModel', array(), array(), '', false);
+        $mockOauth = $this->getMock('\Joindin\Api\OAuth', array(), array(), '', false);
         $mockOauth->expects($this->once())
             ->method('verifyAccessToken')
             ->with('authPart')
@@ -564,7 +564,7 @@ class RequestTest extends \PHPUnit_Framework_TestCase
     public function identifyUserWithBearerTokenTypeSetsUserIdForValidHeader()
     {
         $request   = new \Request($this->config, ['HTTPS' => 'on']);
-        $mockOauth = $this->getMock('OAuthModel', array(), array(), '', false);
+        $mockOauth = $this->getMock('\Joindin\Api\OAuth', array(), array(), '', false);
         $mockOauth->expects($this->once())
             ->method('verifyAccessToken')
             ->with('authPart')

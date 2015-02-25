@@ -19,7 +19,7 @@ class Event_commentsController extends ApiController {
         $start = $this->getStart($request);
         $resultsperpage = $this->getResultsPerPage($request);
 
-        $mapper = new EventCommentMapper($db, $request);
+        $mapper = new \Joindin\Api\Mapper\Event\Comment($db, $request);
         if($comment_id) {
             $list = $mapper->getCommentById($comment_id, $verbose);
             if(false === $list) {

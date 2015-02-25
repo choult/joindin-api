@@ -491,7 +491,7 @@ class Request
             if (is_null($db)) {
                 throw new \InvalidArgumentException('Db Must be provided to get Oauth Model');
             }
-            $this->oauthModel = new OAuthModel($db, $this);
+            $this->oauthModel = new \Joindin\Api\OAuth($db, $this);
         }
 
         return $this->oauthModel;
@@ -504,7 +504,7 @@ class Request
      *
      * @return Request
      */
-    public function setOauthModel(OAuthModel $model)
+    public function setOauthModel(\Joindin\Api\OAuth $model)
     {
         $this->oauthModel = $model;
 

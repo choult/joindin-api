@@ -19,7 +19,7 @@ class TracksController extends ApiController
         $verbose = $this->getVerbosity($request);
 
         if ($track_id) {
-            $mapper = new TrackMapper($db, $request);
+            $mapper = new \Joindin\Api\Mapper\Track($db, $request);
             $list = $mapper->getTrackById($track_id, $verbose);
             if (false === $list) {
                 throw new Exception('Track not found', 404);

@@ -1,6 +1,11 @@
 <?php
 
-class TrackMapper extends ApiMapper
+namespace Joindin\Api\Mapper;
+
+use \Joindin\Api\Mapper;
+use \PDO;
+
+class Track extends Mapper
 {
     public function getDefaultFields() {
         $fields = array(

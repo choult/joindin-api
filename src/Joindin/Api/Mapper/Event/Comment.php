@@ -1,6 +1,13 @@
 <?php
 
-class EventCommentMapper extends ApiMapper {
+namespace Joindin\Api\Mapper\Event;
+
+use \Joindin\Api\Mapper;
+use \PDO;
+use \Exception;
+
+class Comment extends Mapper
+{
     public function getDefaultFields() {
         // warning, users added in build array
         $fields = array(

@@ -24,19 +24,19 @@ class UsersController extends ApiController {
         if(isset($request->url_elements[4])) {
             switch($request->url_elements[4]) {
                 case 'talks':
-                            $talk_mapper = new TalkMapper($db, $request);
+                            $talk_mapper = new \Joindin\Api\Mapper\Talk($db, $request);
                             $list = $talk_mapper->getTalksBySpeaker($user_id, $resultsperpage, $start, $verbose);
                             break;
                 case 'hosted':
-                            $event_mapper = new EventMapper($db, $request);
+                            $event_mapper = new \Joindin\Api\Mapper\Event($db, $request);
                             $list = $event_mapper->getEventsHostedByUser($user_id, $resultsperpage, $start, $verbose);
                             break;
                 case 'attended':
-                            $event_mapper = new EventMapper($db, $request);
+                            $event_mapper = new \Joindin\Api\Mapper\Event($db, $request);
                             $list = $event_mapper->getEventsAttendedByUser($user_id, $resultsperpage, $start, $verbose);
                             break;
                 case 'talk_comments':
-                            $talkComment_mapper = new TalkCommentMapper($db, $request);
+                            $talkComment_mapper = new \Joindin\Api\Mapper\Talk\Comment($db, $request);
                             $list = $talkComment_mapper->getCommentsByUserId($user_id, $resultsperpage, $start, $verbose);
                             break;
                 default:
@@ -44,7 +44,7 @@ class UsersController extends ApiController {
                             break;
             }
         } else {
-            $mapper = new UserMapper($db, $request);
+            $mapper = new \Joindin\Api\Mapper\User($db, $request);
             if($user_id) {
                 $list = $mapper->getUserById($user_id, $verbose);
                 if(count($list['users']) == 0) {
@@ -71,7 +71,7 @@ class UsersController extends ApiController {
         if(isset($request->url_elements[3])) {
             switch($request->url_elements[3]) {
                 case 'verifications':
-                            $user_mapper= new UserMapper($db, $request);
+                            $user_mapper= new \Joindin\Api\Mapper\User($db, $request);
                             $token = filter_var($request->getParameter("token"), FILTER_SANITIZE_STRING);
                             if(empty($token)) {
                                 throw new Exception("Verification token must be supplied", 400);
@@ -93,7 +93,7 @@ class UsersController extends ApiController {
             $user = array();
             $errors = array();
 
-            $user_mapper= new UserMapper($db, $request);
+            $user_mapper= new \Joindin\Api\Mapper\User($db, $request);
 
             // Required Fields
             $user['username'] = filter_var(trim($request->getParameter("username")), FILTER_SANITIZE_STRING);

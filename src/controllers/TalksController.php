@@ -28,11 +28,11 @@ class TalksController extends ApiController {
         if(isset($request->url_elements[4])) {
             switch ($request->url_elements[4]) {
                 case 'comments':
-                    $comment_mapper = new TalkCommentMapper($db, $request);
+                    $comment_mapper = new \Joindin\Api\Mapper\Talk\Comment($db, $request);
                     $list = $comment_mapper->getCommentsByTalkId($talk_id, $resultsperpage, $start, $verbose);
                     break;
                 case 'starred':
-                    $mapper = new TalkMapper($db, $request);
+                    $mapper = new \Joindin\Api\Mapper\Talk($db, $request);
                     $list = $mapper->getUserStarred($talk_id, $request->user_id);
                     break;
             }
@@ -45,7 +45,7 @@ class TalksController extends ApiController {
             } else if (isset($request->parameters['title'])) {
                 $keyword = filter_var($request->parameters['title'], FILTER_SANITIZE_STRING);
 
-                $mapper = new TalkMapper($db, $request);
+                $mapper = new \Joindin\Api\Mapper\Talk($db, $request);
                 $list = $mapper->getTalksByTitleSearch($keyword, $resultsperpage, $start, $verbose);
             } else {
                 // listing makes no sense
@@ -81,7 +81,7 @@ class TalksController extends ApiController {
                     $oauth_model = $request->getOauthModel($db);
                     $consumer_name = $oauth_model->getConsumerName($request->getAccessToken());
 
-                    $comment_mapper = new TalkCommentMapper($db, $request);
+                    $comment_mapper = new \Joindin\Api\Mapper\Talk\Comment($db, $request);
                     $data['user_id'] = $request->user_id;
                     $data['talk_id'] = $talk_id;
                     $data['comment'] = $comment;
@@ -114,7 +114,7 @@ class TalksController extends ApiController {
 
                     if($new_id) {
                         $comment = $comment_mapper->getCommentById($new_id);
-                        $talk_mapper = new TalkMapper($db, $request);
+                        $talk_mapper = new \Joindin\Api\Mapper\Talk($db, $request);
                         $talk = $talk_mapper->getTalkById($talk_id);
                         $speakers = $talk_mapper->getSpeakerEmailsByTalkId($talk_id);
                         $recipients = array();
@@ -132,7 +132,7 @@ class TalksController extends ApiController {
                 case 'starred':
                     // the body of this request is completely irrelevant
                     // The logged in user *is* attending the talk.  Use DELETE to unattend
-                    $talk_mapper = new TalkMapper($db, $request);
+                    $talk_mapper = new \Joindin\Api\Mapper\Talk($db, $request);
                     $talk_mapper->setUserStarred($talk_id, $request->user_id);
                     header("Location: " . $request->base . $request->path_info, NULL, 201);
                     exit;
@@ -152,7 +152,7 @@ class TalksController extends ApiController {
             switch($request->url_elements[4]) {
                 case 'starred':
                     $talk_id = $this->getItemId($request);
-                    $talk_mapper = new TalkMapper($db, $request);
+                    $talk_mapper = new \Joindin\Api\Mapper\Talk($db, $request);
                     $talk_mapper->setUserNonStarred($talk_id, $request->user_id);
                     header("Location: " . $request->base . $request->path_info, NULL, 200);
                     exit;
@@ -162,7 +162,7 @@ class TalksController extends ApiController {
         } else {
             // delete the talk
             $talk_id = $this->getItemId($request);
-            $talk_mapper = new TalkMapper($db, $request);
+            $talk_mapper = new \Joindin\Api\Mapper\Talk($db, $request);
             $list = $talk_mapper->getTalkById($talk_id);
             if(false === $list) {
                 // talk isn't there so it's as good as deleted
@@ -183,7 +183,7 @@ class TalksController extends ApiController {
 
     protected function getTalkById($db, $request, $talk_id, $verbose = false)
     {
-        $mapper = new TalkMapper($db, $request);
+        $mapper = new \Joindin\Api\Mapper\Talk($db, $request);
         $list = $mapper->getTalkById($talk_id, $verbose);
         if(false === $list) {
             throw new Exception('Talk not found', 404);

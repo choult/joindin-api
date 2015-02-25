@@ -1,12 +1,19 @@
 <?php
 
+namespace Joindin\Api\Mapper;
+
+use \Joindin\Api\Mapper;
+use \PDO;
+use \Joindin\Api\Mapper\User as UserMapper;
+use \Exception;
+
 /**
  * EventModel 
  * 
  * @uses ApiModel
  * @package API
  */
-class EventMapper extends ApiMapper 
+class Event extends Mapper
 {
 
     /**

@@ -1,6 +1,13 @@
 <?php
 
-class TalkMapper extends ApiMapper {
+namespace Joindin\Api\Mapper;
+
+use \Joindin\Api\Mapper;
+use \PDO;
+use \Joindin\Api\Mapper as UserMapper;
+
+class Talk extends Mapper
+{
     public function getDefaultFields() {
         $fields = array(
             'talk_title' => 'talk_title',

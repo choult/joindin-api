@@ -1,6 +1,12 @@
 <?php
 
-class ApiMapper
+namespace Joindin\Api;
+
+use \PDO;
+use \Request;
+use \Timezone;
+
+class Mapper
 {
     /**
      * Object constructor, sets up the db and some objects need request too

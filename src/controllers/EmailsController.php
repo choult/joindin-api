@@ -16,7 +16,7 @@ class EmailsController extends ApiController {
         if(isset($request->url_elements[3])) {
             switch($request->url_elements[3]) {
                 case 'verifications':
-                            $user_mapper= new UserMapper($db, $request);
+                            $user_mapper= new \Joindin\Api\Mapper\User($db, $request);
                             $email = filter_var($request->getParameter("email"), FILTER_VALIDATE_EMAIL);
                             if(empty($email)) {
                                 throw new Exception("The email address must be supplied", 400);

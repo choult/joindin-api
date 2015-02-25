@@ -19,7 +19,7 @@ class Talk_commentsController extends ApiController {
         $start = $this->getStart($request);
         $resultsperpage = $this->getResultsPerPage($request);
 
-        $mapper = new TalkCommentMapper($db, $request);
+        $mapper = new \Joindin\Api\Mapper\Talk\Comment($db, $request);
         if($comment_id) {
             $list = $mapper->getCommentById($comment_id, $verbose);
             if(false === $list) {

@@ -1,6 +1,12 @@
 <?php
+namespace Joindin\Api\Mapper\Talk;
 
-class TalkCommentMapper extends ApiMapper {
+use \Joindin\Api\Mapper;
+use \PDO;
+use \Exception;
+
+class Comment extends Mapper
+{
     public function getDefaultFields() {
         $fields = array(
             'rating' => 'rating',
